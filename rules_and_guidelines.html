@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HighGrove - Rules & Guidelines</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen flex flex-col overflow-hidden transition-colors duration-300">
+    <!-- Background animation -->
+    <div id="lottie-animation" class="absolute inset-0 opacity-10 z-0"></div>
+
+    <!-- Scroll Progress Bar -->
+    <div id="scrollProgress" class="fixed top-0 left-0 h-1 bg-blue-500 z-50" style="width: 0%"></div>
+
+    <!-- Top Bar -->
+    <header class="z-10 bg-gray-800 px-4 py-3 flex items-center justify-between shadow sticky top-0">
+        <div class="text-xl font-semibold">HighGrove</div>
+
+        <div class="flex items-center gap-4 relative">
+            <div class="relative">
+                <i class='bx bx-search text-gray-400 absolute top-1/2 left-2 -translate-y-1/2'></i>
+                <input type="text" placeholder="Search rules, guidelines..." class="pl-8 pr-3 py-1 rounded bg-gray-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div class="relative">
+                <button class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600 text-sm" id="menuButton">
+                    <i class='bx bx-user'></i>
+                </button>
+                <div id="dropdownMenu" class="absolute right-0 mt-2 bg-gray-800 border border-gray-600 rounded shadow-lg z-50 hidden">
+                    <button onclick="logout()" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700">Logout</button>
+                    <button onclick="toggleTheme()" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700">Toggle Theme</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content with Sidebar -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-gray-800 p-4 overflow-y-auto transition-all duration-300 hidden md:block max-h-full">
+            <h2 class="text-lg font-semibold mb-4">Bookmarks</h2>
+            <ul class="space-y-2 text-sm" id="bookmarkList">
+                <li><a href="#section1" class="block text-blue-400 hover:underline">Section 1</a></li>
+                <li><a href="#section2" class="block text-blue-400 hover:underline">Section 2</a></li>
+                <li><a href="#section3" class="block text-blue-400 hover:underline">Section 3</a></li>
+            </ul>
+        </aside>
+
+        <!-- Toggle Button for Sidebar -->
+        <button id="toggleSidebar" class="absolute top-20 left-2 md:hidden z-20 bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">☰</button>
+
+        <!-- Content Area -->
+        <main class="flex-1 p-6 overflow-y-auto relative z-10 max-h-full space-y-12" id="mainContent">
+            <section id="section1">
+                <h1 class="text-3xl font-bold mb-4 sticky top-14 bg-gray-900 z-20">Rules & Guidelines</h1>
+                <h2 class="text-xl font-semibold mb-2">Section 1 Heading</h2>
+                <p class="text-gray-300 mb-6">Placeholder text for Section 1. These are rules, instructions, or guidance details...</p>
+            </section>
+
+            <section id="section2">
+                <h2 class="text-xl font-semibold mb-2 sticky top-14 bg-gray-900 z-20">Section 2 Heading</h2>
+                <p class="text-gray-300 mb-6">Placeholder text for Section 2. More content, deeper explanation, or legal references...</p>
+            </section>
+
+            <section id="section3">
+                <h2 class="text-xl font-semibold mb-2 sticky top-14 bg-gray-900 z-20">Section 3 Heading</h2>
+                <p class="text-gray-300 mb-6">Placeholder text for Section 3. Summary notes, obligations, or special considerations...</p>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-500 text-sm py-4 z-10">
+        © 2025 HighGrove. All rights reserved.
+    </footer>
+
+    <script>
+        // Load background animation
+        lottie.loadAnimation({
+            container: document.getElementById("lottie-animation"),
+            renderer: "svg",
+            loop: true,
+            autoplay: true,
+            path: "https://assets10.lottiefiles.com/packages/lf20_touohxv0.json"
+        });
+
+        function logout() {
+            localStorage.removeItem("loggedIn");
+            window.location.href = "index.html";
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('bg-gray-900');
+            document.body.classList.toggle('bg-white');
+            document.body.classList.toggle('text-white');
+            document.body.classList.toggle('text-black');
+        }
+
+        // Sidebar toggle
+        document.getElementById("toggleSidebar").addEventListener("click", () => {
+            document.getElementById("sidebar").classList.toggle("hidden");
+        });
+
+        // Dropdown menu toggle
+        const menuButton = document.getElementById("menuButton");
+        const dropdownMenu = document.getElementById("dropdownMenu");
+        menuButton.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle("hidden");
+        });
+        document.addEventListener("click", function (event) {
+            if (!menuButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.add("hidden");
+            }
+        });
+
+        // Scroll progress indicator
+        window.addEventListener("scroll", () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            document.getElementById("scrollProgress").style.width = `${progress}%`;
+        });
+    </script>
+</body>
+
+</html>
