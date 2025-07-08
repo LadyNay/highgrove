@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HighGrove - Readings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/xlsx.full.min.js"></script>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
+
+    <!-- Login check -->
+    <script>
+        if (localStorage.getItem("loggedIn") !== "true") {
+            window.location.href = "index.html";
+        }
+    </script>
+
+    <!-- Background animation -->
+    <div id="lottie-animation" class="absolute inset-0 opacity-10"></div>
+
+    <!-- Main content -->
+    <div class="container mx-auto py-12 text-center relative z-10">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-4">HighGrove Readings</h1>
+        <p class="text-gray-400 mb-8">Confidential readings sourced from internal spreadsheet.</p>
+
+        <!-- Table container -->
+        <div id="excel-table" class="bg-gray-800 p-4 rounded-lg shadow-lg overflow-auto max-h-[70vh]"></div>
+
+        <button onclick="logout()" class="mt-8 bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full">
+            Logout
+        </button>
+
+        <div class="mt-12 text-gray-500 text-sm">
+            <p>© 2025 HighGrove. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Load background animation
+        lottie.loadAnimation({
+            container: document.getElementById("lottie-animation"),
+            renderer: "svg",
+            loop: true,
+            autoplay: true,
+            path: "https://assets10.lottiefiles.com/packages/lf20_touohxv0.json"
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("loggedIn");
+            window.location.href = "index.html";
+        }
+
+        // Load spreadsheet from the same repo
+        fetch("readings.xlsx")
+            .then(res => res.arrayBuffer())
+            .then(data => {
+                const workbook = XLSX.read(data, { type: "array" });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const html = XLSX.utils.sheet_to_html(sheet);
+                document.getElementById("excel-table").innerHTML = html;
+                styleTable();
+            })
+            .catch(err => {
+                document.getElementById("excel-table").innerHTML =
+                    "<p class='text-red-400'>Failed to load spreadsheet. Please check the file path.</p>";
+                console.error(err);
+            });
+
+        // Optional: Tweak default SheetJS table styles
+        function styleTable() {
+            const table = document.querySelector("#excel-table table");
+            if (!table) return;
+            table.classList.add("min-w-full", "table-auto", "text-left", "text-sm", "text-white");
+            table.querySelectorAll("th").forEach(th => {
+                th.classList.add("bg-gray-700", "p-2", "font-semibold");
+            });
+            table.querySelectorAll("td").forEach(td => {
+                td.classList.add("border-t", "border-gray-600", "p-2");
+            });
+        }
+    </script>
+</body>
+
+</html>
